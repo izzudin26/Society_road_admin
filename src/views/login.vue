@@ -21,7 +21,10 @@ const handleLogin = () => {
   <div
     class="h-screen w-full items-center content-center justify-center flex flex-col space-y-5"
   >
-    <img src="@/assets/lamonganmegilan.png" :class="`w-1/6 ${scale} transform transition-transform duration-500`" />
+    <img
+      src="@/assets/lamonganmegilan.png"
+      :class="`w-1/6 ${scale} transform transition-transform duration-500`"
+    />
     <div class="w-1/4 shadow-sm bg-gray-200 rounded-lg flex flex-row">
       <svg
         xmlns="http://www.w3.org/2000/svg"
