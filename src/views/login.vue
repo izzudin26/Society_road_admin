@@ -1,19 +1,24 @@
 <script setup>
 import { ref } from "vue";
+import { login } from "../webservice/auth";
+import {useRouter} from "vue-router"
 const username = ref("");
 const password = ref("");
 const isShowPassword = ref(false);
 const scale = ref("scale-0");
+const router = useRouter()
 
 setTimeout(() => {
   scale.value = "scale-100";
 }, 100);
 
-const handleLogin = () => {
-  console.log({
-    username: username.value,
-    password: password.value,
-  });
+const handleLogin = async () => {
+  try {
+    await login({ username: username.value, password: password.value });
+    router.replace("/");
+  } catch (error) {
+    alert(error);
+  }
 };
 </script>
 
