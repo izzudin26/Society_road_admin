@@ -1,12 +1,12 @@
 <script setup>
 import { ref } from "vue";
 import { login } from "../webservice/auth";
-import {useRouter} from "vue-router"
+import { useRouter } from "vue-router";
 const username = ref("");
 const password = ref("");
 const isShowPassword = ref(false);
 const scale = ref("scale-0");
-const router = useRouter()
+const router = useRouter();
 
 setTimeout(() => {
   scale.value = "scale-100";
