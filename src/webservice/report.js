@@ -20,3 +20,17 @@ export const getCollectionAllReport = async () => {
     throw error;
   }
 };
+
+export const getReport = async (id) => {
+  // eslint-disable-next-line no-useless-catch
+  try {
+    const res = await axios(`${url}/admin/reports/${id}`, {
+      headers: {
+        Authorization: getToken(),
+      },
+    });
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
