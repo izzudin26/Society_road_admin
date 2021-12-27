@@ -1,8 +1,10 @@
 <script setup>
-import { onMounted, ref } from "vue";
-import { getCollectionAllReport } from "../../webservice/report";
+import { onMounted, ref, computed } from "vue";
+import { getCollectionAllReport, deleteReport } from "../../webservice/report";
 import MapDialog from "./MapDialog.vue";
 import ImageDialog from "./imageDialog.vue";
+
+const search = ref("");
 const reports = ref([]);
 const showDialogMap = ref(false);
 const isshowDialogImage = ref(false);
@@ -40,6 +42,17 @@ const closeDialogImage = () => {
 const closeDialogMap = () => {
   showDialogMap.value = false;
 };
+
+const deletes = async (index) => {
+  await deleteReport(reports.value[index].reportId);
+  reports.value.splice(index, 1);
+};
+
+const filterableData = computed(() =>
+  reports.value.filter((report) =>
+    report.address.toLowerCase().includes(search.value.toLowerCase())
+  )
+);
 </script>
 
 <template>
@@ -68,6 +81,7 @@ const closeDialogMap = () => {
           </svg>
           <input
             type="text"
+            v-model="search"
             placeholder="Cari"
             class="py-3 w-full text-sm bg-transparent block rounded-lg focus:outline-none"
             id=""
@@ -75,12 +89,15 @@ const closeDialogMap = () => {
         </div>
       </div>
       <div
-        class="mx-auto p-5 shadow-lg rounded-md flex flex-col lg:flex-row"
-        v-for="(report, i) in reports"
+        class="mx-auto p-5 shadow-lg rounded-md flex flex-col lg:flex-row w-full justify-between"
+        v-for="(report, i) in filterableData"
         :key="i"
       >
-        <div class="text-md font-semibold mx-5 my-auto flex flex-wrap">
-          {{ report.address }} - {{ report.city }} - {{ report.province }}
+        <div class="text-md font-semibold mx-5 my-auto flex flex-wrap flex-col">
+          {{ report.address }}
+          <span class="text-sm">
+            {{ report.city }} - {{ report.province }}</span
+          >
         </div>
         <div class="flex flex-row flex-wrap lg:flex-nowrap">
           <button
@@ -122,27 +139,7 @@ const closeDialogMap = () => {
             Photo
           </button>
           <button
-            id="save"
-            class="p-5 text-pink-600 text-xs transform hover:scale-105 font-bold flex flex-col"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 my-auto mx-auto"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
-              />
-            </svg>
-            Simpan
-          </button>
-          <button
-            @click="showDialogImage(i)"
+            @click="deletes(i)"
             class="p-5 text-red-500 text-xs transform hover:scale-105 font-bold flex flex-col"
           >
             <svg
