@@ -10,6 +10,7 @@ import {
 } from "vue";
 const props = defineProps(["reportId"]);
 const emit = defineEmits(["close"]);
+const scale = ref("scale-0")
 
 const data = reactive({
   detail: {},
@@ -34,8 +35,18 @@ const networkImage = computed(() =>
   })
 );
 
+const close = () => {
+  scale.value = "scale-0"
+  setTimeout(() => {
+    emit('close')
+  }, 500)
+}
+
 onMounted(() => {
   getData();
+  setTimeout(() => {
+    scale.value = "scale-100"
+  }, 100)
 });
 </script>
 <template>
@@ -43,10 +54,11 @@ onMounted(() => {
     class="w-screen h-screen top-0 left-0 absolute bg-black bg-opacity-50 flex items-center justify-center"
   >
     <div
-      class="bg-white rounded-lg w-2/3 h-2/3 flex flex-col justify-center transform items-center"
+      class="bg-white rounded-lg w-2/3 h-2/3 flex flex-col justify-center transform transition duration-500 items-center"
+      :class="scale"
     >
       <button
-        @click="emit('close')"
+        @click="close"
         class="absolute text-red-500 bg-white rounded-full -top-4 -right-4"
       >
         <svg
