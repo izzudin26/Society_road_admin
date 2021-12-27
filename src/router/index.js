@@ -7,7 +7,11 @@ const routes = [
     name: "reportRoot",
     component: () => import("../views/adminSidebar.vue"),
     children: [
-      { path: "/", component: () => import("../views/admin/report.vue") },
+      {
+        path: "/",
+        name: "report",
+        component: () => import("../views/admin/report.vue"),
+      },
     ],
   },
   {
@@ -24,6 +28,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.name != "Login" && !getToken()) next({ name: "Login" });
+  if (to.name == "Login" && getToken()) next({ name: "report" });
   next();
 });
 
