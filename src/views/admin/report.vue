@@ -2,8 +2,11 @@
 import { onMounted, ref } from "vue";
 import { getCollectionAllReport } from "../../webservice/report";
 import MapDialog from "./MapDialog.vue";
+import ImageDialog from "./imageDialog.vue";
 const reports = ref([]);
 const showDialogMap = ref(false);
+const isshowDialogImage = ref(false);
+const selectedReport = ref(null);
 const latLang = ref([]);
 
 const setShowDialog = (index) => {
@@ -22,6 +25,16 @@ const getData = async () => {
   } catch (error) {
     alert(error);
   }
+};
+
+const showDialogImage = (index) => {
+  selectedReport.value = reports.value[index].reportId;
+  isshowDialogImage.value = true;
+};
+
+const closeDialogImage = () => {
+  selectedReport.value = null;
+  isshowDialogImage.value = false;
 };
 
 const closeDialogMap = () => {
@@ -89,6 +102,7 @@ const closeDialogMap = () => {
             Maps
           </button>
           <button
+          @click="showDialogImage(i)"
             class="p-5 text-red-600 transform hover:scale-105 font-bold flex flex-row"
           >
             <svg
@@ -113,6 +127,7 @@ const closeDialogMap = () => {
       :latLang="latLang"
       @close="closeDialogMap"
     />
+    <ImageDialog v-if="isshowDialogImage" @close="closeDialogImage" :reportId="selectedReport" />
   </div>
 </template>
 
