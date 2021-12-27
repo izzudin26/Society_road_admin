@@ -28,9 +28,11 @@ const handleLogin = async () => {
   >
     <img
       src="@/assets/lamonganmegilan.png"
-      :class="`w-1/6 ${scale} transform transition-transform duration-500`"
+      :class="` w-1/2 md:w-1/6 ${scale} transform transition-transform duration-500`"
     />
-    <div class="w-1/4 shadow-sm bg-gray-200 rounded-lg flex flex-row">
+    <div
+      class="w-1/2 md:w-1/4 shadow-sm bg-gray-200 rounded-lg flex flex-row"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         class="h-7 w-7 my-auto mx-3"
@@ -50,7 +52,7 @@ const handleLogin = async () => {
         class="focus:outline-none bg-transparent w-full rounded-lg p-2"
       />
     </div>
-    <div class="w-1/4 shadow-sm bg-gray-200 rounded-lg flex flex-row">
+    <div class="w-1/2 md:w-1/4 shadow-sm bg-gray-200 rounded-lg flex flex-row">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         class="h-7 w-7 my-auto mx-3"
@@ -107,7 +109,7 @@ const handleLogin = async () => {
     </div>
     <button
       @click="handleLogin()"
-      class="p-2 text-center focus:outline-none bg-blue-400 text-white font-bold rounded-md w-1/4 shadow-md"
+      class="p-2 text-center w-1/2 md:w-1/4 focus:outline-none bg-blue-400 text-white font-bold rounded-md shadow-md"
     >
       Login
     </button>
