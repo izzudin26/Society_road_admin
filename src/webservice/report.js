@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-catch */
 import axios from "axios";
 import { getToken } from "./auth";
 
@@ -8,9 +9,8 @@ export const url = "http://159.223.74.74";
  */
 
 export const getCollectionAllReport = async () => {
-  // eslint-disable-next-line no-useless-catch
   try {
-    const res = await axios(`${url}/admin/reports`, {
+    const res = await axios.get(`${url}/admin/reports`, {
       headers: {
         Authorization: getToken(),
       },
@@ -22,14 +22,25 @@ export const getCollectionAllReport = async () => {
 };
 
 export const getReport = async (id) => {
-  // eslint-disable-next-line no-useless-catch
   try {
-    const res = await axios(`${url}/admin/reports/${id}`, {
+    const res = await axios.get(`${url}/admin/reports/${id}`, {
       headers: {
         Authorization: getToken(),
       },
     });
     return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const deleteReport = async (id) => {
+  try {
+    await axios.delete(`${url}/admin/reports/${id}`, {
+      headers: {
+        Authorization: getToken(),
+      },
+    });
   } catch (error) {
     throw error;
   }
