@@ -47,7 +47,7 @@ const closeDialogMap = () => {
     class="h-screen w-11/12 items-center content-center justify-center flex flex-col"
   >
     <div class="bg-white shadow-md rounded-lg p-5 w-10/12 flex flex-col">
-      <div class="flex flex-row p-5 justify-between">
+      <div class="flex flex-row p-5 justify-between flex-wrap">
         <div class="font-bold text-xl my-auto">Laporan Jalan Rusak</div>
         <div
           class="w-1/4 shadow-md justify-between bg-gray-200 rounded-md my-auto flex flex-row"
@@ -80,16 +80,17 @@ const closeDialogMap = () => {
         :key="i"
       >
         <div class="text-md font-semibold mx-5 my-auto flex flex-wrap">
-          {{ report.address }}
+          {{ report.address }} - {{ report.city }} - {{ report.province }}
         </div>
-        <div class="flex flex-row">
+        <div class="flex flex-row flex-wrap lg:flex-nowrap">
           <button
+            id="showmap"
             @click="setShowDialog(i)"
-            class="p-5 text-blue-600 transform hover:scale-105 font-bold flex flex-row"
+            class="p-5 text-blue-600 text-xs transform hover:scale-105 font-bold flex flex-col"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mx-1 my-auto"
+              class="h-5 w-5 mx-auto my-auto"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -102,12 +103,13 @@ const closeDialogMap = () => {
             Maps
           </button>
           <button
-          @click="showDialogImage(i)"
-            class="p-5 text-green-600 transform hover:scale-105 font-bold flex flex-row"
+            id="showimage"
+            @click="showDialogImage(i)"
+            class="p-5 text-green-600 text-xs transform hover:scale-105 font-bold flex flex-col"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mx-1 my-auto"
+              class="h-5 w-5 mx-auto my-auto"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -119,6 +121,44 @@ const closeDialogMap = () => {
             </svg>
             Photo
           </button>
+          <button
+            id="save"
+            class="p-5 text-pink-600 text-xs transform hover:scale-105 font-bold flex flex-col"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 my-auto mx-auto"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
+              />
+            </svg>
+            Simpan
+          </button>
+          <button
+            @click="showDialogImage(i)"
+            class="p-5 text-red-500 text-xs transform hover:scale-105 font-bold flex flex-col"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 my-auto mx-auto"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            Hapus
+          </button>
         </div>
       </div>
     </div>
@@ -127,7 +167,11 @@ const closeDialogMap = () => {
       :latLang="latLang"
       @close="closeDialogMap"
     />
-    <ImageDialog v-if="isshowDialogImage" @close="closeDialogImage" :reportId="selectedReport" />
+    <ImageDialog
+      v-if="isshowDialogImage"
+      @close="closeDialogImage"
+      :reportId="selectedReport"
+    />
   </div>
 </template>
 
