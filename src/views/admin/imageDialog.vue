@@ -10,7 +10,7 @@ import {
 } from "vue";
 const props = defineProps(["reportId"]);
 const emit = defineEmits(["close"]);
-const scale = ref("scale-0")
+const scale = ref("scale-0");
 
 const data = reactive({
   detail: {},
@@ -36,25 +36,25 @@ const networkImage = computed(() =>
 );
 
 const close = () => {
-  scale.value = "scale-0"
+  scale.value = "scale-0";
   setTimeout(() => {
-    emit('close')
-  }, 500)
-}
+    emit("close");
+  }, 500);
+};
 
 onMounted(() => {
   getData();
   setTimeout(() => {
-    scale.value = "scale-100"
-  }, 100)
+    scale.value = "scale-100";
+  }, 100);
 });
 </script>
 <template>
   <div
-    class="w-screen h-screen top-0 left-0 absolute bg-black bg-opacity-50 flex items-center justify-center"
+    class="w-screen fixed h-screen inset-0 bg-black bg-opacity-50 items-center justify-center"
   >
     <div
-      class="bg-white rounded-lg w-2/3 h-2/3 flex flex-col justify-center transform transition duration-500 items-center"
+      class="bg-white rounded-lg w-2/3 h-2/3 flex flex-col justify-center mx-auto mt-20 transform transition duration-500 items-center"
       :class="scale"
     >
       <button

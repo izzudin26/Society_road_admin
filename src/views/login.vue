@@ -4,6 +4,7 @@ import { login } from "../webservice/auth";
 import { useRouter } from "vue-router";
 const username = ref("");
 const password = ref("");
+const role = ref("");
 const isShowPassword = ref(false);
 const scale = ref("scale-0");
 const router = useRouter();
@@ -14,7 +15,11 @@ setTimeout(() => {
 
 const handleLogin = async () => {
   try {
-    await login({ username: username.value, password: password.value });
+    await login({
+      username: username.value,
+      password: password.value,
+      role: role.value,
+    });
     router.replace("/");
   } catch (error) {
     alert(error);
@@ -30,9 +35,17 @@ const handleLogin = async () => {
       src="@/assets/lamonganmegilan.png"
       :class="` w-1/2 md:w-1/6 ${scale} transform transition-transform duration-500`"
     />
-    <div
-      class="w-1/2 md:w-1/4 shadow-sm bg-gray-200 rounded-lg flex flex-row"
-    >
+    <div class="w-1/2 md:w-1/4 shadow-sm bg-gray-200 rounded-lg flex flex-row">
+      <select
+        class="p-2 rounded-lg bg-gray-200 appearance-none focus:outline-none w-full"
+        v-model="role"
+      >
+        <option value="">Pilih Role</option>
+        <option value="admin">Admin</option>
+        <option value="survey">survey</option>
+      </select>
+    </div>
+    <div class="w-1/2 md:w-1/4 shadow-sm bg-gray-200 rounded-lg flex flex-row">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         class="h-7 w-7 my-auto mx-3"

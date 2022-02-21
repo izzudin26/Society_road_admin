@@ -1,6 +1,10 @@
 <script setup>
 import { onMounted, ref, computed } from "vue";
-import { getCollectionAllReport, deleteReport } from "../../webservice/report";
+import {
+  getCollectionAllReport,
+  deleteReport,
+  validationReport,
+} from "../../webservice/report";
 import MapDialog from "./MapDialog.vue";
 import ImageDialog from "./imageDialog.vue";
 
@@ -10,6 +14,7 @@ const showDialogMap = ref(false);
 const isshowDialogImage = ref(false);
 const selectedReport = ref(null);
 const latLang = ref([]);
+const role = ref(null);
 
 const setShowDialog = (index) => {
   latLang.value = [reports.value[index].lat, reports.value[index].lang];
@@ -17,6 +22,7 @@ const setShowDialog = (index) => {
 };
 
 onMounted(() => {
+  role.value = localStorage.getItem("role");
   getData();
 });
 
@@ -53,11 +59,16 @@ const filterableData = computed(() =>
     report.address.toLowerCase().includes(search.value.toLowerCase())
   )
 );
+
+const doValidation = async (index, isValid) => {
+  reports.value[index].verify = isValid ? 1 : 2;
+  await validationReport(reports.value[index].reportId, isValid);
+};
 </script>
 
 <template>
   <div
-    class="h-screen w-11/12 items-center content-center justify-center flex flex-col"
+    class="w-11/12 items-center content-center justify-center flex flex-col overflow-y-scroll"
   >
     <div class="bg-white shadow-md rounded-lg p-5 w-10/12 flex flex-col">
       <div class="flex flex-row p-5 justify-between flex-wrap">
@@ -98,6 +109,24 @@ const filterableData = computed(() =>
           <span class="text-sm">
             {{ report.city }} - {{ report.province }}</span
           >
+          <span
+            :class="[
+              report.verify == 0
+                ? 'text-black'
+                : report.verify == 1
+                ? 'text-green-500'
+                : 'text-red-500',
+              'font-semibold',
+            ]"
+          >
+            {{
+              report.verify == 0
+                ? "Laporan Belum divalidasi"
+                : report.verify == 1
+                ? "Laporan Valid"
+                : "Laporan Tidak Valid"
+            }}
+          </span>
         </div>
         <div class="flex flex-row flex-wrap lg:flex-nowrap">
           <button
@@ -139,6 +168,7 @@ const filterableData = computed(() =>
             Photo
           </button>
           <button
+            v-if="role == 'admin'"
             @click="deletes(i)"
             class="p-5 text-red-500 text-xs transform hover:scale-105 font-bold flex flex-col"
           >
@@ -156,6 +186,44 @@ const filterableData = computed(() =>
             </svg>
             Hapus
           </button>
+          <template v-else-if="role != 'admin' && report.verify === 0">
+            <button
+              @click="doValidation(i, true)"
+              class="p-5 text-green-500 text-sm font-semibold transform hover:scale-105 flex flex-col"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 my-auto mx-auto"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              Valid
+            </button>
+            <button
+              @click="doValidation(i, false)"
+              class="p-5 text-red-500 text-sm font-semibold transform hover:scale-105 flex flex-col"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 my-auto mx-auto"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              Tidak Valid
+            </button>
+          </template>
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@
 import axios from "axios";
 import { getToken } from "./auth";
 
-export const url = "http://159.223.74.74";
+export const url = "http://159.223.74.74:8000";
 
 /**
  * @returns {AxiosResponse}
@@ -41,6 +41,22 @@ export const deleteReport = async (id) => {
         Authorization: getToken(),
       },
     });
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const validationReport = async (reportId, isValid) => {
+  try {
+    await axios.post(
+      `${url}/admin/validation/${reportId}`,
+      { isValid },
+      {
+        headers: {
+          Authorization: getToken(),
+        },
+      }
+    );
   } catch (error) {
     throw error;
   }

@@ -20,10 +20,10 @@ onMounted(() => {
 <template>
   <div
     @click="closeDialog"
-    class="absolute z-10 bg-black bg-opacity-50 w-full h-screen top-0 left-0 flex justify-center items-center"
+    class="w-screen fixed h-screen inset-0 bg-black bg-opacity-50 items-center justify-center"
   >
     <div
-      class="w-1/2 h-2/3 bg-white rounded-xl transform transition duration-500"
+      class="bg-white rounded-lg w-2/3 h-2/3 flex flex-col justify-center mx-auto mt-20 transform transition duration-500 items-center"
       :class="scaleMap"
       id="map"
     >
