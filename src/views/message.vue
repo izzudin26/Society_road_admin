@@ -1,15 +1,17 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { getUsername } from "../webservice/auth";
-import { getMessagesFromAdmin, sendMessage } from "../webservice/message";
+import { getMessageByOpponent, sendMessage } from "../webservice/message";
+import { useRoute } from "vue-router";
 
 const chats = ref([]);
 const currentUsername = ref("");
 const text = ref("");
+const opponent = ref("");
 
 onMounted(() => {
+  opponent.value = useRoute().params.opponent;
   getChats();
-
   setInterval(() => {
     getChats();
   }, 5000);
@@ -17,12 +19,12 @@ onMounted(() => {
 });
 
 const getChats = async () => {
-  const messages = await getMessagesFromAdmin();
+  const messages = await getMessageByOpponent(opponent.value);
   chats.value = messages.data;
 };
 
 const submitMessage = async () => {
-  await sendMessage({ to: "admin", description: text.value });
+  await sendMessage({ to: opponent.value, description: text.value });
   getChats();
   text.value = "";
 };
@@ -35,7 +37,7 @@ const submitMessage = async () => {
         class="rounded-full w-12 my-auto h-12"
         alt=""
       />
-      <h1 class="text-2xl my-auto font-semibold">Admin</h1>
+      <h1 class="text-2xl my-auto font-semibold">{{ opponent }}</h1>
     </div>
     <div class="flex flex-col w-full p-10 space-y-5 bg-blue-200 h-full">
       <div

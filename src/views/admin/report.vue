@@ -98,10 +98,10 @@ const checkStatus = (numberStatus) => {
 </script>
 
 <template>
-  <div
-    class="w-11/12 items-center content-center justify-center flex flex-col overflow-y-scroll"
-  >
-    <div class="bg-white shadow-md rounded-lg p-5 w-10/12 flex flex-col">
+  <div class="w-10/12 flex flex-col overflow-y-scroll">
+    <div
+      class="bg-white shadow-md rounded-lg mx-auto my-5 p-5 w-10/12 flex flex-col"
+    >
       <div class="font-bold text-xl my-auto">Laporan Jalan Rusak</div>
 
       <div class="flex flex-row p-5 justify-between flex-wrap">
@@ -310,6 +310,24 @@ const checkStatus = (numberStatus) => {
               Selesai
             </button>
           </template>
+          <button
+            v-if="role != 3"
+            class="p-5 text-blue-500 text-sm font-semibold transform hover:scale-105 flex flex-col"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 my-auto mx-auto"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            Feedback
+          </button>
         </div>
       </div>
     </div>

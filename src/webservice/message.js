@@ -11,6 +11,15 @@ export const getMessagesFromAdmin = async () => {
   return res.data;
 };
 
+export const getMessageByOpponent = async (opponent) => {
+  const res = await axios.get(`${url}/message/opponent/${opponent}`, {
+    headers: {
+      authorization: getToken(),
+    },
+  });
+  return res.data;
+};
+
 export const sendMessage = async ({ to, description } = {}) => {
   await axios.post(
     `${url}/message/${to}`,

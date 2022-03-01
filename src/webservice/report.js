@@ -61,3 +61,15 @@ export const validationReport = async (reportId, value) => {
     throw error;
   }
 };
+
+export const sendFeedback = async (message, firebaseUser) => {
+  await axios.post(
+    `${url}/feedback`,
+    { message, to: firebaseUser },
+    {
+      headers: {
+        authorization: getToken(),
+      },
+    }
+  );
+};

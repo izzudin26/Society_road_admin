@@ -12,11 +12,11 @@ const sectionRoute = reactive([
 const additionalAdminRoute = reactive([
   {
     label: "Pesan ke Survey",
-    route: "/message/survey",
+    route: "/message/opponent/survey",
   },
   {
     label: "Pesan ke Kontraktor",
-    route: "/message/kontraktor",
+    route: "/message/opponent/kontraktor",
   },
 ]);
 
@@ -31,8 +31,12 @@ const logout = () => {
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-row justify-end justify-items-end bg-gray-100">
-    <div class="flex flex-col w-1/6 fixed left-0 top-0 h-screen bg-white rounded-r-3xl overflow-hidden">
+  <div
+    class="min-h-screen flex flex-row justify-end justify-items-end bg-gray-100"
+  >
+    <div
+      class="flex flex-col w-1/6 fixed left-0 top-0 h-screen bg-white rounded-r-3xl overflow-hidden"
+    >
       <div class="flex items-center justify-center h-20 shadow-md">
         <h1 class="text-xl uppercase text-indigo-500">Society Road</h1>
       </div>
@@ -52,7 +56,7 @@ const logout = () => {
         <template v-if="role == '1'">
           <li v-for="(section, i) in additionalAdminRoute" :key="i">
             <router-link
-              to="#"
+              :to="section.route"
               class="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-gray-500 hover:text-gray-800"
             >
               <span
@@ -87,7 +91,7 @@ const logout = () => {
         </button>
       </ul>
     </div>
-    <router-view></router-view>
+    <router-view :key="$route.path"></router-view>
   </div>
 </template>
 

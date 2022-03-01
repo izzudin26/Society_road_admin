@@ -13,6 +13,11 @@ const routes = [
         component: () => import("../views/admin/report.vue"),
       },
       {
+        path: "/message/opponent/:opponent",
+        name: "MessageOpponent",
+        component: () => import("../views/message.vue"),
+      },
+      {
         path: "/message/admin",
         name: "MessageToAdmin",
         component: () => import("../views/messageAdmin.vue"),
