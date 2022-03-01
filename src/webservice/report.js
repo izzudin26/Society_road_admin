@@ -46,11 +46,11 @@ export const deleteReport = async (id) => {
   }
 };
 
-export const validationReport = async (reportId, isValid) => {
+export const validationReport = async (reportId, value) => {
   try {
     await axios.post(
       `${url}/admin/validation/${reportId}`,
-      { isValid },
+      { value },
       {
         headers: {
           Authorization: getToken(),

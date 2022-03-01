@@ -5,15 +5,9 @@ export const url = "http://159.223.74.74:8000";
 export const login = async ({ username, password, role } = {}) => {
   // eslint-disable-next-line no-useless-catch
   try {
-    if (
-      (role != "admin" && username == "admin") ||
-      (role == "admin" && username != "admin")
-    ) {
-      throw "Mohon mencocokan username dan role";
-    }
     let req = await axios.post(
       `${url}/login/admin`,
-      { username, password },
+      { username, password, role },
       {
         headers: {
           "Access-Control-Allow-Origin": "*",

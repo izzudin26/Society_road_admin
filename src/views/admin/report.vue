@@ -15,6 +15,7 @@ const isshowDialogImage = ref(false);
 const selectedReport = ref(null);
 const latLang = ref([]);
 const role = ref(null);
+const filterVerify = ref("");
 
 const setShowDialog = (index) => {
   latLang.value = [reports.value[index].lat, reports.value[index].lang];
@@ -29,7 +30,12 @@ onMounted(() => {
 const getData = async () => {
   try {
     const datas = await getCollectionAllReport();
-    reports.value = datas.data;
+    if (role.value == "3") {
+      reports.value = datas.data.filter((r) => r.verify != 0 && r.verify !== 2);
+      console.log(reports.value);
+    } else {
+      reports.value = datas.data;
+    }
   } catch (error) {
     alert(error);
   }
@@ -54,15 +60,40 @@ const deletes = async (index) => {
   reports.value.splice(index, 1);
 };
 
-const filterableData = computed(() =>
-  reports.value.filter((report) =>
+const filterableData = computed(() => {
+  const find = reports.value.filter((report) =>
+    report.verify.toString().includes(filterVerify.value)
+  );
+  return find.filter((report) =>
     report.address.toLowerCase().includes(search.value.toLowerCase())
-  )
-);
+  );
+});
 
-const doValidation = async (index, isValid) => {
-  reports.value[index].verify = isValid ? 1 : 2;
-  await validationReport(reports.value[index].reportId, isValid);
+const doValidation = async (index, indexOfAction) => {
+  reports.value[index].verify = indexOfAction;
+  await validationReport(reports.value[index].reportId, indexOfAction);
+};
+
+const checkStatus = (numberStatus) => {
+  switch (numberStatus) {
+    case 0:
+      return "Belum divalidasi";
+
+    case 1:
+      return "Laporan Valid";
+
+    case 2:
+      return "Laporan tidak valid";
+
+    case 3:
+      return "Laporan diproses";
+
+    case 4:
+      return "Laporan Selesai";
+
+    default:
+      return "Belum divalidasi";
+  }
 };
 </script>
 
@@ -71,8 +102,24 @@ const doValidation = async (index, isValid) => {
     class="w-11/12 items-center content-center justify-center flex flex-col overflow-y-scroll"
   >
     <div class="bg-white shadow-md rounded-lg p-5 w-10/12 flex flex-col">
+      <div class="font-bold text-xl my-auto">Laporan Jalan Rusak</div>
+
       <div class="flex flex-row p-5 justify-between flex-wrap">
-        <div class="font-bold text-xl my-auto">Laporan Jalan Rusak</div>
+        <div
+          class="w-1/4 shadow-md justify-between bg-gray-200 rounded-md my-auto flex flex-row"
+        >
+          <select
+            v-model="filterVerify"
+            class="px-5 py-2 bg-transparent focus:outline-none"
+          >
+            <option value="">Semua</option>
+            <option value="0" v-if="role != 3">Belum divalidasi</option>
+            <option value="1">Laporan Valid</option>
+            <option value="2" v-if="role != 3">Laporan Tidak Valid</option>
+            <option value="3">Proses Perbaikan</option>
+            <option value="4">Perbaikan Selesai</option>
+          </select>
+        </div>
         <div
           class="w-1/4 shadow-md justify-between bg-gray-200 rounded-md my-auto flex flex-row"
         >
@@ -115,17 +162,15 @@ const doValidation = async (index, isValid) => {
                 ? 'text-black'
                 : report.verify == 1
                 ? 'text-green-500'
-                : 'text-red-500',
+                : report.verify == 2
+                ? 'text-red-500'
+                : report.verify == 3
+                ? 'text-yellow-600'
+                : 'text-green-500',
               'font-semibold',
             ]"
           >
-            {{
-              report.verify == 0
-                ? "Laporan Belum divalidasi"
-                : report.verify == 1
-                ? "Laporan Valid"
-                : "Laporan Tidak Valid"
-            }}
+            {{ checkStatus(report.verify) }}
           </span>
         </div>
         <div class="flex flex-row flex-wrap lg:flex-nowrap">
@@ -168,7 +213,7 @@ const doValidation = async (index, isValid) => {
             Photo
           </button>
           <button
-            v-if="role == 'admin'"
+            v-if="role == '1'"
             @click="deletes(i)"
             class="p-5 text-red-500 text-xs transform hover:scale-105 font-bold flex flex-col"
           >
@@ -186,9 +231,9 @@ const doValidation = async (index, isValid) => {
             </svg>
             Hapus
           </button>
-          <template v-else-if="role != 'admin' && report.verify === 0">
+          <template v-else-if="role == '2' && report.verify === 0">
             <button
-              @click="doValidation(i, true)"
+              @click="doValidation(i, 1)"
               class="p-5 text-green-500 text-sm font-semibold transform hover:scale-105 flex flex-col"
             >
               <svg
@@ -206,7 +251,7 @@ const doValidation = async (index, isValid) => {
               Valid
             </button>
             <button
-              @click="doValidation(i, false)"
+              @click="doValidation(i, 2)"
               class="p-5 text-red-500 text-sm font-semibold transform hover:scale-105 flex flex-col"
             >
               <svg
@@ -222,6 +267,47 @@ const doValidation = async (index, isValid) => {
                 />
               </svg>
               Tidak Valid
+            </button>
+          </template>
+          <template v-else-if="role == '3'">
+            <button
+              v-if="report.verify == 1"
+              @click="doValidation(i, 3)"
+              class="p-5 text-green-500 text-sm font-semibold transform hover:scale-105 flex my-auto flex-col"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 mx-auto my-auto"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                <path
+                  fill-rule="evenodd"
+                  d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              Proses Laporan
+            </button>
+            <button
+              v-if="report.verify == 3"
+              @click="doValidation(i, 4)"
+              class="p-5 text-green-700 text-sm font-semibold transform hover:scale-105 flex flex-col"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 my-auto mx-auto"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              Selesai
             </button>
           </template>
         </div>

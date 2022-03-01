@@ -41,8 +41,9 @@ const handleLogin = async () => {
         v-model="role"
       >
         <option value="">Pilih Role</option>
-        <option value="admin">Admin</option>
-        <option value="survey">survey</option>
+        <option value="1">Admin</option>
+        <option value="2">survey</option>
+        <option value="3">Kontraktor</option>
       </select>
     </div>
     <div class="w-1/2 md:w-1/4 shadow-sm bg-gray-200 rounded-lg flex flex-row">
