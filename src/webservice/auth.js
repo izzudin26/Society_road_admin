@@ -1,6 +1,11 @@
 import axios from "axios";
-
+import jwtDecode from "jwt-decode";
 export const url = "http://159.223.74.74:8000";
+
+export const getUsername = () => {
+  const token = localStorage.getItem("token");
+  return jwtDecode(token).username;
+};
 
 export const login = async ({ username, password, role } = {}) => {
   // eslint-disable-next-line no-useless-catch
