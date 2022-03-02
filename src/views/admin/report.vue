@@ -1,13 +1,22 @@
 <script setup>
-import { onMounted, ref, computed } from "vue";
+import { onMounted, ref, computed, reactive } from "vue";
 import {
   getCollectionAllReport,
   deleteReport,
   validationReport,
 } from "../../webservice/report";
+import { sendFeedback } from "../../webservice/feedback";
 import MapDialog from "./MapDialog.vue";
 import ImageDialog from "./imageDialog.vue";
+import FeedbackDialog from "../../components/feedbackDialog.vue";
 
+const dialogData = reactive({
+  username: "",
+  address: "",
+  description: "",
+  name: "",
+});
+const showFeedbackDialog = ref(false);
 const search = ref("");
 const reports = ref([]);
 const showDialogMap = ref(false);
@@ -95,9 +104,41 @@ const checkStatus = (numberStatus) => {
       return "Belum divalidasi";
   }
 };
+
+const showDialogFeedback = (index) => {
+  showFeedbackDialog.value = true;
+  dialogData.username = filterableData.value[index].userId;
+  dialogData.address = filterableData.value[index].address;
+  dialogData.name = filterableData.value[index].user;
+};
+
+const mutateFeedback = (value) => {
+  dialogData.description = value;
+};
+
+const submitFeedback = async () => {
+  await sendFeedback({
+    to: dialogData.username,
+    feedback: dialogData.description,
+  });
+  dialogData.username = "";
+  dialogData.name = "";
+  dialogData.address = "";
+  dialogData.description = "";
+  alert("Berhasil mengirim feedback");
+};
 </script>
 
 <template>
+  <FeedbackDialog
+    :isShow="showFeedbackDialog"
+    :name="dialogData.name"
+    :address="dialogData.address"
+    :text="dialogData.description"
+    @submit="submitFeedback"
+    @close="showFeedbackDialog = false"
+    @description="mutateFeedback"
+  />
   <div class="w-10/12 flex flex-col overflow-y-scroll">
     <div
       class="bg-white shadow-md rounded-lg mx-auto my-5 p-5 w-10/12 flex flex-col"
@@ -311,6 +352,7 @@ const checkStatus = (numberStatus) => {
             </button>
           </template>
           <button
+            @click="showDialogFeedback(i)"
             v-if="role != 3"
             class="p-5 text-blue-500 text-sm font-semibold transform hover:scale-105 flex flex-col"
           >
